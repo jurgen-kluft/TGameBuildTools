@@ -15,8 +15,7 @@ namespace GameBuildAndEnvCheck
 		[STAThread]
 		static void Main()
 		{
-			bool do_delta_compression = true;
-			bool do_content_verification = false;
+			bool do_delta_compression = false;
 			if (do_delta_compression)
 			{
 				bool test_delta_compression = false;
@@ -32,14 +31,27 @@ namespace GameBuildAndEnvCheck
 				}
 			}
 
+			bool do_content_verification = true;
 			if (do_content_verification)
 			{
-				FileVerification verifier = new FileVerification();
-				verifier.Build(@"F:\trhd.builds.pcx64\test\oldbuild", @"F:\trhd.builds.pcx64\test\oldbuild.fcv");
-				verifier.Verify(@"F:\trhd.builds.pcx64\test\oldbuild", @"F:\trhd.builds.pcx64\test\oldbuild.fcv");
-				verifier.Verify(@"F:\trhd.builds.pcx64\test\oldbuild.modified", @"F:\trhd.builds.pcx64\test\oldbuild.fcv");
+				bool test_content_verification = false;
+				if (test_content_verification)
+				{
+					FileVerification verifier = new FileVerification();
+					verifier.Build(@"F:\trhd.builds.pcx64\test\oldbuild", @"F:\trhd.builds.pcx64\test\oldbuild.fcv");
+					verifier.Verify(@"F:\trhd.builds.pcx64\test\oldbuild", @"F:\trhd.builds.pcx64\test\oldbuild.fcv");
+					verifier.Verify(@"F:\trhd.builds.pcx64\test\oldbuild.modified", @"F:\trhd.builds.pcx64\test\oldbuild.fcv");
+				}
+				else
+				{
+					FileVerification verifier = new FileVerification();
+					//verifier.Build(@"F:\trhd.builds.pcx64\7255", @"F:\trhd.builds.pcx64\7255.fcv");
+					verifier.Verify(@"F:\trhd.builds.pcx64\7255", @"F:\trhd.builds.pcx64\7255.fcv");
+				}
 			}
-			else
+
+			bool do_gui = false;
+			if (do_gui)
 			{
 				Application.EnableVisualStyles();
 				Application.SetCompatibleTextRenderingDefault(false);

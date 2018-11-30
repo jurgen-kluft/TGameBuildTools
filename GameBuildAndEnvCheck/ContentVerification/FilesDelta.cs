@@ -88,7 +88,7 @@ namespace ContentVerification
 						using (var deltaStream = new FileStream(deltafilepath, FileMode.Create, FileAccess.Write, FileShare.Read))
 						{
 							totalNewDataSize += newFileStream.Length;
-							deltaBuilder.BuildDelta(newFileStream, new SignatureReader(signatureFileStream, new SilentProgressReporter()), new AggregateCopyOperationsDecorator(new BinaryDeltaWriter(deltaStream)));
+							deltaBuilder.BuildDelta(newFileStream, new SignatureReader(signatureFileStream, null), new AggregateCopyOperationsDecorator(new BinaryDeltaWriter(deltaStream)));
 							totalDeltaDataSize += deltaStream.Length;
 						}
 
@@ -116,7 +116,7 @@ namespace ContentVerification
 						using (var deltaStream = new FileStream(deltafilepath, FileMode.Create, FileAccess.Write, FileShare.Read))
 						{
 							totalNewDataSize += newFileStream.Length;
-							deltaBuilder.BuildDelta(newFileStream, new SignatureReader(signatureFileStream, new SilentProgressReporter()), new AggregateCopyOperationsDecorator(new BinaryDeltaWriter(deltaStream)));
+							deltaBuilder.BuildDelta(newFileStream, new SignatureReader(signatureFileStream, null), new AggregateCopyOperationsDecorator(new BinaryDeltaWriter(deltaStream)));
 							totalDeltaDataSize += deltaStream.Length;
 						}
 
@@ -145,7 +145,7 @@ namespace ContentVerification
 
 			Console2.WriteLineWithColor(ConsoleColor.Green, "info: Applying patch");
 
-			Int64 totalSignatureDataSize = 0;
+			Int64 totalOldDataSize = 0;
 			Int64 totalDeltaDataSize = 0;
 			Int64 totalNewDataSize = 0;
 
@@ -188,7 +188,9 @@ namespace ContentVerification
 					using (var deltaStream = new FileStream(deltafilepath, FileMode.Open, FileAccess.Read, FileShare.Read))
 					using (var newFileStream = new FileStream(newfilepath, FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
 					{
-						deltaApplier.Apply(basisStream, new BinaryDeltaReader(deltaStream, new ConsoleProgressReporter()), newFileStream);
+						totalOldDataSize += basisStream.Length;
+						totalDeltaDataSize += deltaStream.Length;
+						deltaApplier.Apply(basisStream, new BinaryDeltaReader(deltaStream, null), newFileStream);
 						totalNewDataSize += newFileStream.Length;
 					}
 					Console2.WriteLineWithColor(ConsoleColor.Green, "info: file '{0}' applied patch", relativepath);
@@ -201,7 +203,9 @@ namespace ContentVerification
 					using (var deltaStream = new FileStream(deltafilepath, FileMode.Open, FileAccess.Read, FileShare.Read))
 					using (var newFileStream = new FileStream(newfilepath, FileMode.Create, FileAccess.ReadWrite, FileShare.Read))
 					{
-						deltaApplier.Apply(basisStream, new BinaryDeltaReader(deltaStream, new ConsoleProgressReporter()), newFileStream);
+						// totalOldDataSize += basisStream.Length;	// basisStream.Length == 0
+						totalDeltaDataSize += deltaStream.Length;
+						deltaApplier.Apply(basisStream, new BinaryDeltaReader(deltaStream, null), newFileStream);
 						totalNewDataSize += newFileStream.Length;
 					}
 
@@ -211,9 +215,8 @@ namespace ContentVerification
 
 			TimeSpan duration = DateTime.Now - start;
 			Console2.WriteLineWithColor(ConsoleColor.Green, "info: finished applying patch, took {0}", duration.ToPerf());
-			Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for patched data: {0}", totalNewDataSize.ToByteSize());
 			Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for deltas: {0}", totalDeltaDataSize.ToByteSize());
-			Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for signatures: {0}", totalSignatureDataSize.ToByteSize());
+			Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for patched data: {0}", totalNewDataSize.ToByteSize());
 		}
 	}
 }

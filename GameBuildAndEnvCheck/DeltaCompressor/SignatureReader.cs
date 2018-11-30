@@ -76,7 +76,10 @@ namespace Octodiff.Core
 
         void Progress()
         {
-            reporter.ReportProgress("Reading signature", reader.BaseStream.Position, reader.BaseStream.Length);
+			if (reporter != null)
+			{
+				reporter.ReportProgress("Reading signature", reader.BaseStream.Position, reader.BaseStream.Length);
+			}
         }
     }
 }
