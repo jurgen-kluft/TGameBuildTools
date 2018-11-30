@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using Microsoft.Win32;
 
-namespace GameBuildAndEnvCheck
+namespace GameBuildTools
 {
 	public static class WindowsSDK
 	{

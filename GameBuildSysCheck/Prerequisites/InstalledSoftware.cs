@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Win32;
 
-namespace GameBuildAndEnvCheck
+namespace GameBuildTools
 {
 	public static class InstalledSoftware
 	{

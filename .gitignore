@@ -34,5 +34,5 @@
 
 # ignore the following folders
 /.vs/
-/GameBuildAndEnvCheck/bin/
-/GameBuildAndEnvCheck/obj/
+/target/
+

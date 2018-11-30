@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("GameBuildAndEnvCheck")]
+[assembly: AssemblyTitle("GameBuildPatcher")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("GameBuildAndEnvCheck")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyProduct("GameBuildPatcher")]
+[assembly: AssemblyCopyright("Copyright © VirtuosGames 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ddd214d3-8ea0-4491-a147-164538a83c41")]
+[assembly: Guid("ddd214d3-8ea0-4491-a147-164538a83c11")]
 
 // Version information for an assembly consists of the following four values:
 //

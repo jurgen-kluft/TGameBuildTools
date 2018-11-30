@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
-using Octodiff;
-using Octodiff.Core;
-using Octodiff.Diagnostics;
 using ColoredConsole;
+using Octodiff.Core;
 
-namespace ContentVerification
+namespace GameBuildTools
 {
 	public static class FilesDelta
 	{
