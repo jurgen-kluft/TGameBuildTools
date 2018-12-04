@@ -54,6 +54,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CCore.cs" />
+    <Compile Include="CmdLine\AdditionalArgumentsSettings.cs" />
+    <Compile Include="CmdLine\Arguments\Argument.cs" />
+    <Compile Include="CmdLine\Arguments\BoundedValueArgument.cs" />
+    <Compile Include="CmdLine\Arguments\CertifiedValueArgument.cs" />
+    <Compile Include="CmdLine\Arguments\DirectoryArgument.cs" />
+    <Compile Include="CmdLine\Arguments\EnumeratedValueArgument.cs" />
+    <Compile Include="CmdLine\Arguments\FieldArgumentBind.cs" />
+    <Compile Include="CmdLine\Arguments\FileArgument.cs" />
+    <Compile Include="CmdLine\Arguments\IArgumentWithDefaultValue.cs" />
+    <Compile Include="CmdLine\Arguments\IValueArgument.cs" />
+    <Compile Include="CmdLine\Arguments\RegexValueArgument.cs" />
+    <Compile Include="CmdLine\Arguments\SwitchArgument.cs" />
+    <Compile Include="CmdLine\Arguments\ValueArgument.cs" />
+    <Compile Include="CmdLine\CommandLineParser.cs" />
+    <Compile Include="CmdLine\Compatibility\TypeExtensions.cs" />
+    <Compile Include="CmdLine\Exceptions\Exceptions.cs" />
+    <Compile Include="CmdLine\IResource.cs" />
+    <Compile Include="CmdLine\Messages.cs" />
+    <Compile Include="CmdLine\Validation\ArgumentCertification.cs" />
+    <Compile Include="CmdLine\Validation\ArgumentGroupCertification.cs" />
+    <Compile Include="CmdLine\Validation\ArgumentRequiresOtherArgumentsCertification.cs" />
+    <Compile Include="CmdLine\Validation\DistinctGroupsCertification.cs" />
     <Compile Include="Console\ColoredConsole.cs" />
     <Compile Include="Console\ColoredConsolePlayground.cs" />
     <Compile Include="Console\ColoredConsoleStringExtensions.cs" />
@@ -100,6 +122,8 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="CmdLine\Doc\CommandLineParser.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -6,13 +6,13 @@ on an Core i7 machine.
 
 ## Create a Verification Signature
 
-GameBuildVerification -c create -f D:\\build -o D:\\build.gbv
+`GameBuildVerification -c create -f D:\\build -o D:\\build.gbv`
 
-After this you can your build to the client including this tool and the .gbv file.
+After this you can your build to the client including this tool and the `.gbv` file.
 
 ## Verify using a Verification Signature
 
 Then when they have received it they can run the following command to verify the content:
 
-GameBuildVerification -c verify -f D:\\build -o D:\\build.gbv
+`GameBuildVerification -c verify -f D:\\build -o D:\\build.gbv`
 

@@ -8,8 +8,10 @@ using Octodiff.Core;
 
 namespace GameBuildTools
 {
-	public static class FilesDelta
+	public static class Patcher
 	{
+		public static bool Verbose { get; set; }
+
 		public static void GlobMergeOldAndNew(string oldpath, string newpath, SortedDictionary<string, FileData> all_files)
 		{
 			HashSet<string> addedset = new HashSet<string>();
@@ -36,7 +38,7 @@ namespace GameBuildTools
 		{
 			DateTime start = DateTime.Now;
 
-			Console2.WriteLineWithColor(ConsoleColor.Green, "info: Starting delta");
+			Console2.WriteLineWithColor(ConsoleColor.Green, "info: creating patch");
 
 			Int64 totalOldDataSize = 0;
 			Int64 totalNewDataSize = 0;
@@ -90,7 +92,10 @@ namespace GameBuildTools
 							totalDeltaDataSize += deltaStream.Length;
 						}
 
-						Console2.WriteLineWithColor(ConsoleColor.Green, "info: file '{0}' (old:yes, new:yes), created signature and delta", relativepath);
+						if (Verbose)
+						{
+							Console2.WriteLineWithColor(ConsoleColor.Green, "info: file '{0}' (old:yes, new:yes), created signature and delta", relativepath);
+						}
 					}
 					else
 					{
@@ -118,30 +123,38 @@ namespace GameBuildTools
 							totalDeltaDataSize += deltaStream.Length;
 						}
 
-						Console2.WriteLineWithColor(ConsoleColor.Green, "info: file '{0}' (old:no, new:yes), created signature and delta", relativepath);
+						if (Verbose)
+						{
+							Console2.WriteLineWithColor(ConsoleColor.Green, "info: file '{0}' (old:no, new:yes), created signature and delta", relativepath);
+						}
 					}
 				}
 				else
 				{
 					// Create delta-file using a non-existing (empty) 'newfile' since a 'oldfile' exists
-
-					Console2.WriteLineWithColor(ConsoleColor.Green, "info: file '{0}' (old:yes, new:no), skipping signature and delta", relativepath);
+					if (Verbose)
+					{
+						Console2.WriteLineWithColor(ConsoleColor.Green, "info: file '{0}' (old:yes, new:no), skipping signature and delta", relativepath);
+					}
 				}
 			}
 
 			TimeSpan duration = DateTime.Now - start;
 			Console2.WriteLineWithColor(ConsoleColor.Green, "info: finished building patch, took {0}", duration.ToPerf());
-			Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for old data: {0}", totalOldDataSize.ToByteSize());
-			Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for new data: {0}", totalNewDataSize.ToByteSize());
-			Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for deltas: {0}", totalDeltaDataSize.ToByteSize());
-			Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for signatures: {0}", totalSignatureDataSize.ToByteSize());
+			if (Verbose)
+			{
+				Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for old data: {0}", totalOldDataSize.ToByteSize());
+				Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for new data: {0}", totalNewDataSize.ToByteSize());
+				Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for deltas: {0}", totalDeltaDataSize.ToByteSize());
+				Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for signatures: {0}", totalSignatureDataSize.ToByteSize());
+			}
 		}
 
 		public static void Apply(string oldpath, string deltapath, string newpath)
 		{
 			DateTime start = DateTime.Now;
 
-			Console2.WriteLineWithColor(ConsoleColor.Green, "info: Applying patch");
+			Console2.WriteLineWithColor(ConsoleColor.Green, "info: applying patch");
 
 			Int64 totalOldDataSize = 0;
 			Int64 totalDeltaDataSize = 0;
@@ -191,7 +204,10 @@ namespace GameBuildTools
 						deltaApplier.Apply(basisStream, new BinaryDeltaReader(deltaStream, null), newFileStream);
 						totalNewDataSize += newFileStream.Length;
 					}
-					Console2.WriteLineWithColor(ConsoleColor.Green, "info: file '{0}' applied patch", relativepath);
+					if (Verbose)
+					{
+						Console2.WriteLineWithColor(ConsoleColor.Green, "info: file '{0}' applied patch", relativepath);
+					}
 				}
 				else
 				{
@@ -207,14 +223,20 @@ namespace GameBuildTools
 						totalNewDataSize += newFileStream.Length;
 					}
 
-					Console2.WriteLineWithColor(ConsoleColor.Yellow, "info: file '{0}' applied patch", relativepath);
+					if (Verbose)
+					{
+						Console2.WriteLineWithColor(ConsoleColor.Yellow, "info: file '{0}' applied patch", relativepath);
+					}
 				}
 			}
 
 			TimeSpan duration = DateTime.Now - start;
 			Console2.WriteLineWithColor(ConsoleColor.Green, "info: finished applying patch, took {0}", duration.ToPerf());
-			Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for deltas: {0}", totalDeltaDataSize.ToByteSize());
-			Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for patched data: {0}", totalNewDataSize.ToByteSize());
+			if (Verbose)
+			{
+				Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for deltas: {0}", totalDeltaDataSize.ToByteSize());
+				Console2.WriteLineWithColor(ConsoleColor.Green, "info: total data size for patched data: {0}", totalNewDataSize.ToByteSize());
+			}
 		}
 	}
 }

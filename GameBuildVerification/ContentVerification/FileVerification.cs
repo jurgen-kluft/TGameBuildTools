@@ -7,8 +7,12 @@ namespace ContentVerification
 {
 	public class FileVerification
 	{
+		public bool Verbose { get; set; }
+
 		public void Build(string rootdir, string output_filepath)
 		{
+			rootdir = rootdir.EnsureEndsWith("\\");
+
 			FileFilter filter = new FileFilter();
 			List<string> all_files = new List<string>();
 			List<FileEntry> fileentries = new List<FileEntry>();
@@ -27,15 +31,20 @@ namespace ContentVerification
 
 		public void Verify(string rootdir, string input_filepath)
 		{
+			rootdir = rootdir.EnsureEndsWith("\\");
+
 			List<FileEntry> verifiedfileentries = new List<FileEntry>();
 			ReadContentInfo(rootdir, input_filepath, verifiedfileentries);
 
 			Dictionary<string, FileEntry> verifiedfileentrydict = new Dictionary<string, FileEntry>();
 			foreach (FileEntry fe in verifiedfileentries)
 			{
-				string relativefilepath = fe.FilePath.Substring(rootdir.Length + 1);
+				string relativefilepath = fe.FilePath.Substring(rootdir.Length);
 				verifiedfileentrydict.Add(relativefilepath.ToLower(), fe);
 			}
+
+			Int64 verifyErrors = 0;
+			Int64 verifyWarnings = 0;
 
 			FileFilter filter = new FileFilter();
 			List<string> all_files = new List<string>();
@@ -43,7 +52,7 @@ namespace ContentVerification
 			Dictionary<string, FileEntry> fileentrydict = new Dictionary<string, FileEntry>();
 			foreach (FileData fd in FindFiles.EnumerateFiles(rootdir, filter))
 			{
-				string relativefilepath = fd.Path.Substring(rootdir.Length + 1);
+				string relativefilepath = fd.Path.Substring(rootdir.Length);
 				if (verifiedfileentrydict.ContainsKey(relativefilepath.ToLower()))
 				{
 					FileEntry fe = new FileEntry();
@@ -55,17 +64,19 @@ namespace ContentVerification
 				}
 				else
 				{
-					Console2.WriteLineWithColor(ConsoleColor.Red, "info: file '{0}' is not part of the build content ", relativefilepath);
+					if (Verbose)
+					{
+						verifyWarnings++;
+						Console2.WriteLineWithColor(ConsoleColor.Yellow, "warning: file '{0}' is not part of the build content ", relativefilepath);
+					}
 				}
 			}
 
 			FilesHash.Hash(rootdir, fileentries);
 
-			Int64 verifyErrors = 0;
-			Int64 verifyWarnings = 0;
 			foreach (FileEntry vfe in verifiedfileentries)
 			{
-				string relativefilepath = vfe.FilePath.Substring(rootdir.Length + 1);
+				string relativefilepath = vfe.FilePath.Substring(rootdir.Length);
 				if (!fileentrydict.ContainsKey(relativefilepath.ToLower()))
 				{
 					verifyErrors++;
@@ -75,7 +86,7 @@ namespace ContentVerification
 
 			foreach (FileEntry fe in fileentries)
 			{
-				string relativefilepath = fe.FilePath.Substring(rootdir.Length + 1);
+				string relativefilepath = fe.FilePath.Substring(rootdir.Length);
 
 				FileEntry vfe;
 				if (verifiedfileentrydict.TryGetValue(relativefilepath.ToLower(), out vfe))
@@ -89,8 +100,11 @@ namespace ContentVerification
 				}
 				else
 				{
-					verifyWarnings++; 
-					Console2.WriteLineWithColor(ConsoleColor.Yellow, "warning: file '{0}' is not part of the build content ", relativefilepath);
+					verifyWarnings++;
+					if (Verbose)
+					{
+						Console2.WriteLineWithColor(ConsoleColor.Yellow, "warning: file '{0}' is not part of the build content ", relativefilepath);
+					}
 				}
 			}
 
@@ -102,7 +116,10 @@ namespace ContentVerification
 			{
 				if (verifyWarnings > 0)
 				{
-					Console2.WriteLineWithColor(ConsoleColor.Yellow, "warning: some additional files detected");
+					if (Verbose)
+					{
+						Console2.WriteLineWithColor(ConsoleColor.Yellow, "warning: some additional files detected");
+					}
 				}
 				Console2.WriteLineWithColor(ConsoleColor.Green, "info: content verified, everything OK!");
 			}
@@ -116,7 +133,7 @@ namespace ContentVerification
 			StreamWriter writer = new StreamWriter(writestream);
 			foreach (var fe in entries)
 			{
-				string relativefilepath = fe.FilePath.Substring(rootdir.Length + 1);
+				string relativefilepath = fe.FilePath.Substring(rootdir.Length);
 				writer.WriteLine("Path={0}", relativefilepath);
 				writer.WriteLine("Size={0}", fe.FileSize);
 				writer.WriteLine("Time={0}", fe.FileTime.ToUniversalTime().Ticks);
