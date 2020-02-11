@@ -63,6 +63,7 @@
     <Compile Include="Console\IConsole.cs" />
     <Compile Include="Prerequisites\EnvVars.cs" />
     <Compile Include="Prerequisites\InstalledSoftware.cs" />
+    <Compile Include="Prerequisites\Windows.cs" />
     <Compile Include="Prerequisites\WindowsSDK.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

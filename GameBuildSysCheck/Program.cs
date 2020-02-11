@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Windows.Forms;
+using System.IO;
 
 namespace GameBuildTools
 {
@@ -11,10 +11,13 @@ namespace GameBuildTools
 		[STAThread]
 		static void Main()
 		{
-			EnvVars.Print();
-			InstalledSoftware.Print();
+			//EnvVars.Print();
+			//InstalledSoftware.Print();
 			WindowsSDK.Print();
-		}
+
+			string winver = Windows.GetVersion();
+			Console.WriteLine(winver);
+		} 
 
 	}
 }
